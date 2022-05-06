@@ -45,21 +45,22 @@ class PushController
         $type = $request->request->get(Helper::ERECHT24_PUSH_PARAM_TYPE);
 
         if (empty($secret)) {
-            return new Response('No secret given.', Response::HTTP_BAD_REQUEST);
-        }
-
-        if (empty($type)) {
-            return new Response('No type given.', Response::HTTP_BAD_REQUEST);
-        }
-
-        if (!Helper::isValidPushType($type)) {
-            return new Response('Invalid type "'.$type.'".', Response::HTTP_BAD_REQUEST);
+            return new Response('No secret given.', Response::HTTP_UNAUTHORIZED);
         }
 
         $rootPage = $this->db->fetchAssociative("SELECT * FROM tl_page WHERE type = 'root' AND er24ApiKey != '' AND er24Secret = ? AND er24ClientId != '' LIMIT 1", [$secret]);
 
         if (false === $rootPage) {
-            return new Response('Invalid secret.', Response::HTTP_BAD_REQUEST);
+            return new Response('Invalid secret.', Response::HTTP_UNAUTHORIZED);
+        }
+
+        if (empty($type) || !Helper::isValidPushType($type)) {
+            return new Response('Invalid type.', Response::HTTP_UNPROCESSABLE_ENTITY);
+        }
+
+        if ($type === Helper::PUSH_TYPE_PING) {
+            $pingResponse = Helper::getPingResponse();
+            return new Response($pingResponse['message'], $pingResponse['code']);
         }
 
         $tag = 'er24_legaltext_'.$type.'_root'.$rootPage['id'];
