@@ -5,8 +5,7 @@ declare(strict_types=1);
 /*
  * This file is part of the Contao eRecht24 Rechtstexte extension.
  *
- * (c) inspiredminds
- * (c) Christian Feneberg
+ * (c) fenepedia
  *
  * @license LGPL-3.0-or-later
  */
@@ -27,7 +26,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 /**
  * Registers or updates an eRecht24 push client via the API key on save.
- * 
+ *
  * @Callback(table="tl_page", target="fields.er24ApiKey.save")
  */
 class PageApiKeySaveCallbackListener

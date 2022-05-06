@@ -5,8 +5,7 @@ declare(strict_types=1);
 /*
  * This file is part of the Contao eRecht24 Rechtstexte extension.
  *
- * (c) inspiredminds
- * (c) Christian Feneberg
+ * (c) fenepedia
  *
  * @license LGPL-3.0-or-later
  */
@@ -21,13 +20,14 @@ use Contao\PageModel;
 use Contao\Template;
 use eRecht24\RechtstexteSDK\LegalTextHandler;
 use Fenepedia\ContaoErecht24Rechtstexte\ContaoErecht24RechtstexteBundle;
-use Symfony\Component\Cache\Adapter\FilesystemTagAwareAdapter;
+use Symfony\Component\Cache\Adapter\AdapterInterface;
+use Symfony\Component\Cache\Adapter\TagAwareAdapterInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Fetches the selected legal text from the eRecht24 API, puts them into the cache and displays the text.
- * 
+ *
  * @ContentElement(type=LegalTextElementController::TYPE, category="includes")
  */
 class LegalTextElementController extends AbstractContentElementController
@@ -36,7 +36,7 @@ class LegalTextElementController extends AbstractContentElementController
 
     private $cache;
 
-    public function __construct(FilesystemTagAwareAdapter $legalTextCache)
+    public function __construct(AdapterInterface $legalTextCache)
     {
         $this->cache = $legalTextCache;
     }
@@ -74,7 +74,10 @@ class LegalTextElementController extends AbstractContentElementController
             }
 
             $cacheItem->set($document->getHtml('de' === $page->language ? 'de' : 'en'));
-            $cacheItem->tag($tags);
+
+            if ($this->cache instanceof TagAwareAdapterInterface) {
+                $cacheItem->tag($tags);
+            }
 
             $this->cache->save($cacheItem);
         }
