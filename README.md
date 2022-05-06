@@ -1,2 +1,4 @@
-# contao-er24-rechtstexte
-Extension für die e-Recht24 API
+Contao eRecht24 Rechtstexte
+===========================
+
+Contao Extension für die eRecht24 API.

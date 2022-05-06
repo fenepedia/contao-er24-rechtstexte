@@ -1,0 +1,51 @@
+{
+    "name": "fenepedia/contao-er24-rechtstexte",
+    "description": "Contao extension for the eRecht24 API.",
+    "type": "contao-bundle",
+    "license": "LGPL-3.0-or-later",
+    "homepage": "https://github.com/fenepedia/contao-er24-rechtstexte",
+    "authors": [
+        {
+            "name": "Fenepedia",
+            "homepage": "https://www.fenepedia.de",
+            "role": "Owner"
+        },
+        {
+            "name": "Fritz Michael Gschwantner",
+            "email": "fmg@inspiredminds.at",
+            "role": "Developer"
+        }
+    ],
+	"support": {
+		"issues": "https://github.com/fenepedia/contao-er24-rechtstexte/issues",
+		"source": "https://github.com/fenepedia/contao-er24-rechtstexte"
+	},
+    "require": {
+        "php": ">=7.1",
+        "contao/core-bundle": "^4.9",
+        "erecht24/rechtstexte-sdk": "^1.0",
+        "jean85/pretty-package-versions": "^1.0 || ^2.0",
+        "symfony/cache": "^4.4 || ^5.1",
+        "symfony/config": "^4.4 || ^5.1",
+        "symfony/dependency-injection": "^4.4 || ^5.1",
+        "symfony/http-foundation": "^4.4 || ^5.1",
+        "symfony/http-kernel": "^4.4 || ^5.1",
+        "symfony/routing": "^4.4 || ^5.1"
+    },
+    "autoload": {
+        "psr-4": {
+            "Fenepedia\\ContaoErecht24Rechtstexte\\": "src/"
+        }
+    },
+    "extra": {
+        "contao-manager-plugin": "Fenepedia\\ContaoErecht24Rechtstexte\\ContaoManager\\Plugin"
+    },
+    "require-dev": {
+        "friendsofphp/php-cs-fixer": "^2.16 || ^3.0"
+    },
+    "config": {
+        "allow-plugins": {
+            "contao-components/installer": true
+        }
+    }
+}

@@ -1,0 +1,19 @@
+services:
+    _defaults:
+        autowire: true
+        autoconfigure: true
+        public: false
+        bind:
+            $legalTextCache: '@contao_er24.legal_text_cache'
+
+    Fenepedia\ContaoErecht24Rechtstexte\:
+        resource: ../src
+        exclude: ../src/{ContaoManager,DependencyInjection}
+
+    Fenepedia\ContaoErecht24Rechtstexte\Controller\:
+        resource: ../src/Controller
+        public: true
+
+    contao_er24.legal_text_cache:
+        class: Symfony\Component\Cache\Adapter\FilesystemTagAwareAdapter
+        arguments: ['er24', 0, '%kernel.cache_dir%']
