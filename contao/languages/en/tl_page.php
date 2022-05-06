@@ -12,5 +12,5 @@ declare(strict_types=1);
 
 $GLOBALS['TL_LANG']['tl_page']['erecht24_legend'] = 'eRecht24';
 $GLOBALS['TL_LANG']['tl_page']['er24ApiKey'] = ['eRecht24 API key', 'Enter the API key of your eRecht24 project.'];
-$GLOBALS['TL_LANG']['tl_page']['er24Secret'] = ['eRecht24 API secret', 'The secret for the eRecht24 API.'];
-$GLOBALS['TL_LANG']['tl_page']['er24ClientId'] = ['eRecht24 API client ID', 'The client ID for the eRecht24 API.'];
+$GLOBALS['TL_LANG']['tl_page']['er24Secret'] = ['eRecht24 secret', 'The secret for push client of the eRecht24 API.'];
+$GLOBALS['TL_LANG']['tl_page']['er24ClientId'] = ['eRecht24 client ID', 'The client ID of the push client of the eRecht24 API.'];
