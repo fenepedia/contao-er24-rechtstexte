@@ -41,8 +41,12 @@ class PushController
 
     public function __invoke(Request $request): Response
     {
-        // we get all json inside of the body
         $json = json_decode($request->getContent(), true);
+
+        if (false === $json) {
+            return new Response('Invalid request body.', Response::HTTP_UNPROCESSABLE_ENTITY);
+        }
+
         $secret = $json[Helper::ERECHT24_PUSH_PARAM_SECRET];
         $type = $json[Helper::ERECHT24_PUSH_PARAM_TYPE];
 
@@ -73,6 +77,6 @@ class PushController
 
         $this->httpCacheManager->invalidateTags([$tag]);
 
-        return new Response('', Response::HTTP_NO_CONTENT);
+        return new Response('OK', Response::HTTP_OK);
     }
 }
