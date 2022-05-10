@@ -41,8 +41,10 @@ class PushController
 
     public function __invoke(Request $request): Response
     {
-        $secret = $request->request->get(Helper::ERECHT24_PUSH_PARAM_SECRET);
-        $type = $request->request->get(Helper::ERECHT24_PUSH_PARAM_TYPE);
+        // we get all json inside of the body
+        $json = json_decode($request->getContent(), true);
+        $secret = $json[Helper::ERECHT24_PUSH_PARAM_SECRET];
+        $type = $json[Helper::ERECHT24_PUSH_PARAM_TYPE];
 
         if (empty($secret)) {
             return new Response('No secret given.', Response::HTTP_UNAUTHORIZED);
