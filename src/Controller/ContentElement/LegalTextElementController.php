@@ -18,7 +18,9 @@ use Contao\CoreBundle\Controller\ContentElement\AbstractContentElementController
 use Contao\CoreBundle\ServiceAnnotation\ContentElement;
 use Contao\PageModel;
 use Contao\Template;
+use eRecht24\RechtstexteSDK\Helper\Helper;
 use eRecht24\RechtstexteSDK\LegalTextHandler;
+use eRecht24\RechtstexteSDK\Model\LegalText;
 use Fenepedia\ContaoErecht24Rechtstexte\ContaoErecht24RechtstexteBundle;
 use Symfony\Component\Cache\Adapter\AdapterInterface;
 use Symfony\Component\Cache\Adapter\TagAwareAdapterInterface;
@@ -33,6 +35,12 @@ use Symfony\Component\HttpFoundation\Response;
 class LegalTextElementController extends AbstractContentElementController
 {
     public const TYPE = 'er24_legal_text';
+
+    private static $pushTypeMap = [
+        LegalText::TEXT_TYPE_IMPRINT => Helper::PUSH_TYPE_IMPRINT,
+        LegalText::TEXT_TYPE_PRIVACY_POLICY => Helper::PUSH_TYPE_PRIVACY_POLICY,
+        LegalText::TEXT_TYPE_PRIVACY_POLICY_SOCIAL_MEDIA => Helper::PUSH_TYPE_PRIVACY_POLICY_SOCIAL_MEDIA,
+    ];
 
     private $cache;
 
@@ -50,14 +58,15 @@ class LegalTextElementController extends AbstractContentElementController
             $page = PageModel::findByPk(ArticleModel::findById($model->pid)->pid);
         }
 
-        if (null === $page) {
+        if (null === $page || !isset(self::$pushTypeMap[$model->er24Type])) {
             return new Response('');
         }
 
         $page->loadDetails();
 
+        $pushType = self::$pushTypeMap[$model->er24Type];
         $cacheKey = implode('.', ['legaltext', $page->rootId, $model->er24Type]);
-        $tags = ['er24_legaltext', 'er24_legaltext_'.$model->er24Type.'_root'.$page->rootId];
+        $tags = ['er24_legaltext', 'er24_legaltext_'.$pushType.'_root'.$page->rootId];
 
         $cacheItem = $this->cache->getItem($cacheKey);
 
