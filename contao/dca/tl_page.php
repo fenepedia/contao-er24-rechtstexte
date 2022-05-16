@@ -23,18 +23,21 @@ use Contao\CoreBundle\DataContainer\PaletteManipulator;
 
 $GLOBALS['TL_DCA']['tl_page']['fields']['er24ApiKey'] = [
     'inputType' => 'text',
+    'exclude' => true,
     'eval' => ['maxlength' => 128, 'tl_class' => 'w50', 'rgxp' => 'alnum'],
     'sql' => ['type' => 'string', 'length' => 128, 'default' => ''],
 ];
 
 $GLOBALS['TL_DCA']['tl_page']['fields']['er24Secret'] = [
     'inputType' => 'text',
+    'exclude' => true,
     'eval' => ['maxlength' => 255, 'tl_class' => 'w50 clr', 'readonly' => true],
     'sql' => ['type' => 'string', 'length' => 255, 'default' => ''],
 ];
 
 $GLOBALS['TL_DCA']['tl_page']['fields']['er24ClientId'] = [
     'inputType' => 'text',
+    'exclude' => true,
     'eval' => ['maxlength' => 64, 'tl_class' => 'w50', 'readonly' => true],
     'sql' => ['type' => 'string', 'length' => 64, 'default' => ''],
 ];
