@@ -22,7 +22,7 @@ Anschließend gibt es 2 Möglichkeiten die Texte zu aktualisieren:
 2. Über die Systemwartung von Contao den entsprechenden Cache leeren
 
 Eine ausführliche Doku inkl. Video findest du hier:
-[https://www.fenepedia.de/preview.php/contao-er24-rechtstexte](https://www.fenepedia.de/preview.php/contao-er24-rechtstexte)
+[https://www.fenepedia.de/contao-er24-rechtstexte](https://www.fenepedia.de/contao-er24-rechtstexte)
 
 
 ## Unterstützer:innen
