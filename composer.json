@@ -1,9 +1,14 @@
 {
     "name": "fenepedia/contao-er24-rechtstexte",
-    "description": "Contao extension for the eRecht24 API.",
+    "description": "Contao extension to fetch legal texts from the eRecht24 API",
     "type": "contao-bundle",
     "license": "LGPL-3.0-or-later",
-    "homepage": "https://github.com/fenepedia/contao-er24-rechtstexte",
+    "homepage": "https://www.fenepedia.de/contao-er24-rechtstexte",
+    "keywords": [
+        "eRecht24",
+        "e-Recht24",
+        "Rechtstexte"
+    ],
     "authors": [
         {
             "name": "Fenepedia",
