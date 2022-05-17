@@ -15,6 +15,7 @@ namespace Fenepedia\ContaoErecht24Rechtstexte\Controller\ContentElement;
 use Contao\ArticleModel;
 use Contao\ContentModel;
 use Contao\CoreBundle\Controller\ContentElement\AbstractContentElementController;
+use Contao\CoreBundle\Routing\ScopeMatcher;
 use Contao\CoreBundle\ServiceAnnotation\ContentElement;
 use Contao\PageModel;
 use Contao\Template;
@@ -26,6 +27,7 @@ use Symfony\Component\Cache\Adapter\AdapterInterface;
 use Symfony\Component\Cache\Adapter\TagAwareAdapterInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * Fetches the selected legal text from the eRecht24 API, puts them into the cache and displays the text.
@@ -43,10 +45,14 @@ class LegalTextElementController extends AbstractContentElementController
     ];
 
     private $cache;
+    private $translator;
+    private $scopeMatcher;
 
-    public function __construct(AdapterInterface $legalTextCache)
+    public function __construct(AdapterInterface $legalTextCache, TranslatorInterface $translator, ScopeMatcher $scopeMatcher)
     {
         $this->cache = $legalTextCache;
+        $this->translator = $translator;
+        $this->scopeMatcher = $scopeMatcher;
     }
 
     protected function getResponse(Template $template, ContentModel $model, Request $request): ?Response
@@ -59,7 +65,7 @@ class LegalTextElementController extends AbstractContentElementController
         }
 
         if (null === $page || !isset(self::$pushTypeMap[$model->er24Type])) {
-            return new Response('');
+            return new Response();
         }
 
         $page->loadDetails();
@@ -72,17 +78,17 @@ class LegalTextElementController extends AbstractContentElementController
 
         if (!$cacheItem->isHit()) {
             if (empty($page->er24ApiKey)) {
-                return new Response('');
+                return new Response();
             }
 
             $handler = new LegalTextHandler($page->er24ApiKey, $model->er24Type, ContaoErecht24RechtstexteBundle::PLUGIN_KEY);
             $document = $handler->importDocument();
 
             if (null === $document) {
-                return new Response('');
+                return new Response();
             }
 
-            $cacheItem->set($document->getHtml('de' === $page->language ? 'de' : 'en'));
+            $cacheItem->set($document->getHtml('de' === substr($page->language, 0, 2) ? 'de' : 'en'));
 
             if ($this->cache instanceof TagAwareAdapterInterface) {
                 $cacheItem->tag($tags);
@@ -93,7 +99,17 @@ class LegalTextElementController extends AbstractContentElementController
 
         $this->tagResponse($tags);
 
-        $template->document = $cacheItem->get();
+        $html = $cacheItem->get();
+
+        if (empty($html)) {
+            if ($this->scopeMatcher->isBackendRequest($request)) {
+                return new Response($this->translator->trans('data_not_available', ['%type%' => $model->er24Type], 'ContaoErecht24Rechtstexte'));
+            }
+
+            return new Response();
+        }
+
+        $template->document = $html;
 
         return new Response($template->parse());
     }

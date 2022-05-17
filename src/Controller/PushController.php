@@ -64,8 +64,9 @@ class PushController
             return new Response('Invalid type.', Response::HTTP_UNPROCESSABLE_ENTITY);
         }
 
-        if ($type === Helper::PUSH_TYPE_PING) {
+        if (Helper::PUSH_TYPE_PING === $type) {
             $pingResponse = Helper::getPingResponse();
+
             return new Response($pingResponse['message'], $pingResponse['code']);
         }
 
