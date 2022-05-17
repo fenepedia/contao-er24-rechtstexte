@@ -27,7 +27,7 @@ Eine ausführliche Doku inkl. Video findest du hier:
 
 ## Unterstützer:innen
 Die Entwicklung der Erweiterung wurde von den folgenden Personen bzw. Unternehmen ermöglicht:
-- Fritz Michael Gschwantner| [inspiredminds](https://www.inspiredminds.at/)
+- Fritz Michael Gschwantner | [inspiredminds](https://www.inspiredminds.at/)
 - Marco Müller | [DOCKMEDIA](https://www.dockmedia.de/)
 - Sabine Kühlkamp | [drachenspur](https://www.drachenspur.de/)
 - Nicole Weiß | [Webstylisten](https://webstylisten.de/)
