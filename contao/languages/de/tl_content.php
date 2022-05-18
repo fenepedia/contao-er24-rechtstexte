@@ -19,3 +19,4 @@ $GLOBALS['TL_LANG']['tl_content']['er24TextTypes'] = [
     LegalText::TEXT_TYPE_PRIVACY_POLICY => 'Datenschutzerklärung',
     LegalText::TEXT_TYPE_PRIVACY_POLICY_SOCIAL_MEDIA => 'Datenschutzerklärung für Social-Media',
 ];
+$GLOBALS['TL_LANG']['tl_content']['er24Html'] = ['Rechtstext-Fallback Speicher', 'Speichert die zuletzt verfügbare Version des Textes in der Datenbank.'];

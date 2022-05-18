@@ -12,4 +12,4 @@ declare(strict_types=1);
 
 use Fenepedia\ContaoErecht24Rechtstexte\Controller\ContentElement\LegalTextElementController;
 
-$GLOBALS['TL_LANG']['CTE'][LegalTextElementController::TYPE] = ['eRecht24 Legal Text', 'Includes a legal text from the eRecht24 API.'];
+$GLOBALS['TL_LANG']['CTE'][LegalTextElementController::TYPE] = ['eRecht24 legal text', 'Includes a legal text from the eRecht24 API.'];

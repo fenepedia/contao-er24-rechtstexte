@@ -19,6 +19,7 @@ use Contao\CoreBundle\Routing\ScopeMatcher;
 use Contao\CoreBundle\ServiceAnnotation\ContentElement;
 use Contao\PageModel;
 use Contao\Template;
+use Doctrine\DBAL\Connection;
 use eRecht24\RechtstexteSDK\Helper\Helper;
 use eRecht24\RechtstexteSDK\LegalTextHandler;
 use eRecht24\RechtstexteSDK\Model\LegalText;
@@ -47,12 +48,14 @@ class LegalTextElementController extends AbstractContentElementController
     private $cache;
     private $translator;
     private $scopeMatcher;
+    private $db;
 
-    public function __construct(AdapterInterface $legalTextCache, TranslatorInterface $translator, ScopeMatcher $scopeMatcher)
+    public function __construct(AdapterInterface $legalTextCache, TranslatorInterface $translator, ScopeMatcher $scopeMatcher, Connection $db)
     {
         $this->cache = $legalTextCache;
         $this->translator = $translator;
         $this->scopeMatcher = $scopeMatcher;
+        $this->db = $db;
     }
 
     protected function getResponse(Template $template, ContentModel $model, Request $request): ?Response
@@ -69,39 +72,17 @@ class LegalTextElementController extends AbstractContentElementController
         }
 
         $page->loadDetails();
-
         $pushType = self::$pushTypeMap[$model->er24Type];
-        $cacheKey = implode('.', ['legaltext', $page->rootId, $model->er24Type]);
         $tags = ['er24_legaltext', 'er24_legaltext_'.$pushType.'_root'.$page->rootId];
 
-        $cacheItem = $this->cache->getItem($cacheKey);
+        // Fetch the HTML content of the legal text (live, cached or database)
+        $html = $this->getHtml($page, $model, $tags);
 
-        if (!$cacheItem->isHit()) {
-            if (empty($page->er24ApiKey)) {
-                return new Response();
-            }
-
-            $handler = new LegalTextHandler($page->er24ApiKey, $model->er24Type, ContaoErecht24RechtstexteBundle::PLUGIN_KEY);
-            $document = $handler->importDocument();
-
-            if (null === $document) {
-                return new Response();
-            }
-
-            $cacheItem->set($document->getHtml('de' === substr($page->language, 0, 2) ? 'de' : 'en'));
-
-            if ($this->cache instanceof TagAwareAdapterInterface) {
-                $cacheItem->tag($tags);
-            }
-
-            $this->cache->save($cacheItem);
-        }
-
+        // Tag this response for the HTTP cache
         $this->tagResponse($tags);
 
-        $html = $cacheItem->get();
-
         if (empty($html)) {
+            // Show a message in the back end if no data for this legal text is available
             if ($this->scopeMatcher->isBackendRequest($request)) {
                 return new Response($this->translator->trans('data_not_available', ['%type%' => $model->er24Type], 'ContaoErecht24Rechtstexte'));
             }
@@ -112,5 +93,42 @@ class LegalTextElementController extends AbstractContentElementController
         $template->document = $html;
 
         return new Response($template->parse());
+    }
+
+    private function getHtml(PageModel $page, ContentModel $model, array $tags): ?string
+    {
+        $cacheKey = implode('.', ['legaltext', $page->rootId, $model->er24Type]);
+
+        // Retrieve cached item
+        $cacheItem = $this->cache->getItem($cacheKey);
+
+        if (!$cacheItem->isHit() && !empty($page->er24ApiKey)) {
+            $handler = new LegalTextHandler($page->er24ApiKey, $model->er24Type, ContaoErecht24RechtstexteBundle::PLUGIN_KEY);
+            $document = $handler->importDocument();
+
+            if (null !== $document) {
+                // Fetch the HTML content of the legal text
+                $html = $document->getHtml('de' === substr($page->language, 0, 2) ? 'de' : 'en');
+
+                // Store in cache item
+                $cacheItem->set($html);
+
+                // Tag the cache item
+                if ($this->cache instanceof TagAwareAdapterInterface) {
+                    $cacheItem->tag($tags);
+                }
+
+                // Store cache item in cache storage
+                $this->cache->save($cacheItem);
+
+                // Store non-empty version in database perpetually
+                if (!empty($html)) {
+                    $this->db->update('tl_content', ['er24Html' => $html], ['id' => (int) $model->id]);
+                }
+            }
+        }
+
+        // Return either the cached item or the database fallback
+        return $cacheItem->get() ?: $model->er24Html;
     }
 }
