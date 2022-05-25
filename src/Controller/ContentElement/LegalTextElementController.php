@@ -89,8 +89,7 @@ class LegalTextElementController extends AbstractContentElementController
             if ($this->scopeMatcher->isBackendRequest($request)) {
                 if($this->lastErecht24Error) {
                     $errorTemplate = new FrontendTemplate('ce_er24_error');
-                    $errorTemplate->code = $this->lastErecht24Error->getCode();
-                    $errorTemplate->message = $this->lastErecht24Error->getMessage();
+                    $errorTemplate->message = $this->lastErecht24Error;
                     return new Response($errorTemplate->parse());
                 } else {
                     return new Response($this->translator->trans('data_not_available', ['%type%' => $model->er24Type], 'ContaoErecht24Rechtstexte'));
@@ -115,14 +114,9 @@ class LegalTextElementController extends AbstractContentElementController
 
         if (!$cacheItem->isHit() && !empty($page->er24ApiKey)) {
             $handler = new LegalTextHandler($page->er24ApiKey, $model->er24Type, ContaoErecht24RechtstexteBundle::PLUGIN_KEY);
-            try {
-                $document = $handler->importDocument();
-            } catch (Exception $exception) {
-                // save execption
-                $this->lastErecht24Error = $exception;
-            }
+            $document = $handler->importDocument();
 
-            if (null !== $document) {
+            if (null !== $document && $document->getHtmlDE() !== null) {
                 // Fetch the HTML content of the legal text
                 $html = $document->getHtml('de' === substr($page->language, 0, 2) ? 'de' : 'en');
 
@@ -141,6 +135,8 @@ class LegalTextElementController extends AbstractContentElementController
                 if (!empty($html)) {
                     $this->db->update('tl_content', ['er24Html' => $html], ['id' => (int) $model->id]);
                 }
+            } else {
+                $this->lastErecht24Error = $handler->getLastErrorMessage('de' === substr($page->language, 0, 2) ? 'de' : 'en');
             }
         }
 
