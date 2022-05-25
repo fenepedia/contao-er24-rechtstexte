@@ -8,7 +8,7 @@ Mehr zur Mitgliedschaft kannst Du auf der [Website von eRecht24 erfahren](https:
 ## Schnellstartanleitung
 
 1. Erweiterung über den Contao Manager installieren
-2. Über den Projekt Manager von eRecht24 ein neues Projekt anlegen
+2. Über den [Projekt Manager von eRecht24](https://www.e-recht24.de/mitglieder/tools/projekt-manager/) ein neues Projekt anlegen
 3. Texte für Impressum und Datenschutzerklärung über eRecht24 erstellen
 4. Neuen API-Key über das Zahnradsymbol des Projekts generieren
 5. In Contao den API-Key beim Starpunkt der Website hinterlegen
