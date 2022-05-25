@@ -3,7 +3,7 @@ Contao eRecht24 Rechtstexte
 
 Diese Erweiterung ermöglicht die einfache Integration von Impressum und Datenschutzerklärung von eRecht24 in Contao.
 Die Erweiterung stellt lediglich eine Schnittstelle zur Verfügung. Es wird eine aktive Mitgliedschaft bei eRecht24 benötigt, um entsprechende API-Keys zu generieren.
-Mehr zur Mitgliedschaft kannst du auf der [Website von eRecht24 erfahren](https://www.digistore24.com/link/bsd5szx88tlv/).
+Mehr zur Mitgliedschaft kannst Du auf der [Website von eRecht24 erfahren](https://www.digistore24.com/link/bsd5szx88tlv/).
 
 ## Schnellstartanleitung
 
@@ -21,7 +21,7 @@ Anschließend gibt es 2 Möglichkeiten die Texte zu aktualisieren:
 1. «Synchronisieren-Icon» innerhalb von eRecht24 klicken
 2. Über die Systemwartung von Contao den entsprechenden Cache leeren
 
-Eine ausführliche Doku inkl. Video findest du hier:
+Eine ausführliche Doku inkl. Video findest Du hier:
 [https://www.fenepedia.de/contao-er24-rechtstexte](https://www.fenepedia.de/contao-er24-rechtstexte)
 
 
