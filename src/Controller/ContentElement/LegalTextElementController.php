@@ -17,9 +17,11 @@ use Contao\ContentModel;
 use Contao\CoreBundle\Controller\ContentElement\AbstractContentElementController;
 use Contao\CoreBundle\Routing\ScopeMatcher;
 use Contao\CoreBundle\ServiceAnnotation\ContentElement;
+use Contao\FrontendTemplate;
 use Contao\PageModel;
 use Contao\Template;
 use Doctrine\DBAL\Connection;
+use eRecht24\RechtstexteSDK\Exceptions\Exception;
 use eRecht24\RechtstexteSDK\Helper\Helper;
 use eRecht24\RechtstexteSDK\LegalTextHandler;
 use eRecht24\RechtstexteSDK\Model\LegalText;
@@ -49,6 +51,7 @@ class LegalTextElementController extends AbstractContentElementController
     private $translator;
     private $scopeMatcher;
     private $db;
+    private $lastErecht24Error;
 
     public function __construct(AdapterInterface $legalTextCache, TranslatorInterface $translator, ScopeMatcher $scopeMatcher, Connection $db)
     {
@@ -84,7 +87,14 @@ class LegalTextElementController extends AbstractContentElementController
         if (empty($html)) {
             // Show a message in the back end if no data for this legal text is available
             if ($this->scopeMatcher->isBackendRequest($request)) {
-                return new Response($this->translator->trans('data_not_available', ['%type%' => $model->er24Type], 'ContaoErecht24Rechtstexte'));
+                if($this->lastErecht24Error) {
+                    $errorTemplate = new FrontendTemplate('ce_er24_error');
+                    $errorTemplate->code = $this->lastErecht24Error->getCode();
+                    $errorTemplate->message = $this->lastErecht24Error->getMessage();
+                    return new Response($errorTemplate->parse());
+                } else {
+                    return new Response($this->translator->trans('data_not_available', ['%type%' => $model->er24Type], 'ContaoErecht24Rechtstexte'));
+                }
             }
 
             return new Response();
@@ -97,6 +107,7 @@ class LegalTextElementController extends AbstractContentElementController
 
     private function getHtml(PageModel $page, ContentModel $model, array $tags): ?string
     {
+        $this->lastErecht24Error = null;
         $cacheKey = implode('.', ['legaltext', $page->rootId, $model->er24Type]);
 
         // Retrieve cached item
@@ -104,7 +115,12 @@ class LegalTextElementController extends AbstractContentElementController
 
         if (!$cacheItem->isHit() && !empty($page->er24ApiKey)) {
             $handler = new LegalTextHandler($page->er24ApiKey, $model->er24Type, ContaoErecht24RechtstexteBundle::PLUGIN_KEY);
-            $document = $handler->importDocument();
+            try {
+                $document = $handler->importDocument();
+            } catch (Exception $exception) {
+                // save execption
+                $this->lastErecht24Error = $exception;
+            }
 
             if (null !== $document) {
                 // Fetch the HTML content of the legal text
