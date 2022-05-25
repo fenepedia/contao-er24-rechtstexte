@@ -8,15 +8,17 @@ Mehr zur Mitgliedschaft kannst Du auf der [Website von eRecht24 erfahren](https:
 ## Schnellstartanleitung
 
 1. Erweiterung über den Contao Manager installieren
-2. Über den [Projekt Manager von eRecht24](https://www.e-recht24.de/mitglieder/tools/projekt-manager/) ein neues Projekt anlegen
-3. Texte für Impressum und Datenschutzerklärung über eRecht24 erstellen
-4. Neuen API-Schlüssel über das Zahnradsymbol des Projekts generieren
-5. In Contao den API-Schlüssel beim Starpunkt der Website hinterlegen
-6. Neues Inhaltselement vom Typ «eRecht 24 Rechtstext» erstellen
-7. Entsprechenden Rechtstext-Typ auswählen
+2. Datenbank im Contao-Installtool (/contao/install) aktualisieren
+3. Über den [Projekt Manager von eRecht24](https://www.e-recht24.de/mitglieder/tools/projekt-manager/) ein neues Projekt anlegen
+4. Texte für Impressum und Datenschutzerklärung über eRecht24 erstellen
+5. Neuen API-Schlüssel über das Zahnradsymbol des Projekts generieren
+6. In Contao den API-Schlüssel beim Starpunkt der Website hinterlegen
+7. Neues Inhaltselement vom Typ «eRecht 24 Rechtstext» erstellen
+8. Entsprechenden Rechtstext-Typ auswählen
 
 ## Texte aktualisieren
-Die Texte werden nicht automatisch aktualisiert. Die Texte müssen zunächst über den Projekt Manager von eRecht24 neu generiert werden.
+**Die Texte werden nicht automatisch aktualisiert**. Die Texte müssen zunächst über den Projekt Manager von eRecht24 neu generiert werden.
+
 Anschließend gibt es 2 Möglichkeiten die Texte zu aktualisieren:
 1. «Synchronisieren-Icon» innerhalb von eRecht24 klicken
 2. Über die Systemwartung von Contao den entsprechenden Cache leeren
