@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Fenepedia\ContaoErecht24Rechtstexte\Controller\ContentElement;
 
 use Contao\ArticleModel;
+use Contao\BackendTemplate;
 use Contao\ContentModel;
 use Contao\CoreBundle\Controller\ContentElement\AbstractContentElementController;
 use Contao\CoreBundle\Routing\ScopeMatcher;
@@ -88,7 +89,7 @@ class LegalTextElementController extends AbstractContentElementController
             // Show a message in the back end if no data for this legal text is available
             if ($this->scopeMatcher->isBackendRequest($request)) {
                 if($this->lastErecht24Error) {
-                    $errorTemplate = new FrontendTemplate('ce_er24_error');
+                    $errorTemplate = new BackendTemplate('be_er24_error');
                     $errorTemplate->message = $this->lastErecht24Error;
                     return new Response($errorTemplate->parse());
                 } else {
