@@ -121,6 +121,12 @@ class LegalTextElementController extends AbstractContentElementController
                 // Fetch the HTML content of the legal text
                 $html = $document->getHtml('de' === substr($page->language, 0, 2) ? 'de' : 'en');
 
+                // replace emails with contao spambot safe links
+                // try to get it working with not normalized domain names
+                // please use idn syntax: https://de.wikipedia.org/wiki/Internationalisierter_Domainname
+                $mailRegex = "/([-0-9a-zA-Z.+_äöüßÄÖÜéèê]+@[-0-9a-zA-Z.+_äöüßÄÖÜéèê]+.[a-zA-Z])/";
+                $html = preg_replace($mailRegex, "{{email::$1}}", $html);
+                
                 // Store in cache item
                 $cacheItem->set($html);
 
