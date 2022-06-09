@@ -1,7 +1,7 @@
 <?php
 
 $header = <<<EOF
-This file is part of the Contao eRecht24 Rechtstexte extension.
+This file is part of the Contao Rechtstexte für eRecht24 extension.
 
 (c) fenepedia
 

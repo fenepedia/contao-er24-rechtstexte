@@ -1,4 +1,4 @@
-Contao eRecht24 Rechtstexte
+Contao Rechtstexte für eRecht24
 ===========================
 
 Diese Erweiterung ermöglicht die einfache Integration von Impressum und Datenschutzerklärung von eRecht24 in Contao.
@@ -28,6 +28,8 @@ Eine ausführliche Doku inkl. Video findest Du hier:
 
 
 ## Unterstützer:innen
+**Diese Erweiterung wird nicht durch eRecht24 programmiert.**  
+
 Die Entwicklung der Erweiterung wurde von den folgenden Personen bzw. Unternehmen ermöglicht:
 - Fritz Michael Gschwantner | [inspiredminds](https://www.inspiredminds.at/)
 - Marco Müller | [DOCKMEDIA](https://www.dockmedia.de/)
