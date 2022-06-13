@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /*
- * This file is part of the Contao eRecht24 Rechtstexte extension.
+ * This file is part of the Contao Rechtstexte für eRecht24 extension.
  *
  * (c) fenepedia
  *
@@ -13,13 +13,16 @@ declare(strict_types=1);
 namespace Fenepedia\ContaoErecht24Rechtstexte\Controller\ContentElement;
 
 use Contao\ArticleModel;
+use Contao\BackendTemplate;
 use Contao\ContentModel;
 use Contao\CoreBundle\Controller\ContentElement\AbstractContentElementController;
 use Contao\CoreBundle\Routing\ScopeMatcher;
 use Contao\CoreBundle\ServiceAnnotation\ContentElement;
+use Contao\FrontendTemplate;
 use Contao\PageModel;
 use Contao\Template;
 use Doctrine\DBAL\Connection;
+use eRecht24\RechtstexteSDK\Exceptions\Exception;
 use eRecht24\RechtstexteSDK\Helper\Helper;
 use eRecht24\RechtstexteSDK\LegalTextHandler;
 use eRecht24\RechtstexteSDK\Model\LegalText;
@@ -49,6 +52,7 @@ class LegalTextElementController extends AbstractContentElementController
     private $translator;
     private $scopeMatcher;
     private $db;
+    private $lastErecht24Error;
 
     public function __construct(AdapterInterface $legalTextCache, TranslatorInterface $translator, ScopeMatcher $scopeMatcher, Connection $db)
     {
@@ -84,7 +88,13 @@ class LegalTextElementController extends AbstractContentElementController
         if (empty($html)) {
             // Show a message in the back end if no data for this legal text is available
             if ($this->scopeMatcher->isBackendRequest($request)) {
-                return new Response($this->translator->trans('data_not_available', ['%type%' => $model->er24Type], 'ContaoErecht24Rechtstexte'));
+                if($this->lastErecht24Error) {
+                    $errorTemplate = new BackendTemplate('be_er24_error');
+                    $errorTemplate->message = $this->lastErecht24Error;
+                    return new Response($errorTemplate->parse());
+                } else {
+                    return new Response($this->translator->trans('data_not_available', ['%type%' => $model->er24Type], 'ContaoErecht24Rechtstexte'));
+                }
             }
 
             return new Response();
@@ -97,6 +107,7 @@ class LegalTextElementController extends AbstractContentElementController
 
     private function getHtml(PageModel $page, ContentModel $model, array $tags): ?string
     {
+        $this->lastErecht24Error = null;
         $cacheKey = implode('.', ['legaltext', $page->rootId, $model->er24Type]);
 
         // Retrieve cached item
@@ -106,10 +117,16 @@ class LegalTextElementController extends AbstractContentElementController
             $handler = new LegalTextHandler($page->er24ApiKey, $model->er24Type, ContaoErecht24RechtstexteBundle::PLUGIN_KEY);
             $document = $handler->importDocument();
 
-            if (null !== $document) {
+            if (null !== $document && $document->getHtmlDE() !== null) {
                 // Fetch the HTML content of the legal text
                 $html = $document->getHtml('de' === substr($page->language, 0, 2) ? 'de' : 'en');
 
+                // replace emails with contao spambot safe links
+                // try to get it working with not normalized domain names
+                // please use idn syntax: https://de.wikipedia.org/wiki/Internationalisierter_Domainname
+                $mailRegex = "/([-0-9a-zA-Z.+_äöüßÄÖÜéèê]+@[-0-9a-zA-Z.+_äöüßÄÖÜéèê]+.[a-zA-Z])/";
+                $html = preg_replace($mailRegex, "{{email::$1}}", $html);
+                
                 // Store in cache item
                 $cacheItem->set($html);
 
@@ -125,6 +142,8 @@ class LegalTextElementController extends AbstractContentElementController
                 if (!empty($html)) {
                     $this->db->update('tl_content', ['er24Html' => $html], ['id' => (int) $model->id]);
                 }
+            } else {
+                $this->lastErecht24Error = $handler->getLastErrorMessage('de' === substr($page->language, 0, 2) ? 'de' : 'en');
             }
         }
 

@@ -1,12 +1,8 @@
 <?php $this->extend('block_searchable'); ?>
 
-<?php $this->block('error'); ?>
-  <?= $this->error ?>
-<?php $this->endblock(); ?>
-
 <?php $this->block('headline'); ?>
 <?php $this->endblock(); ?>
 
 <?php $this->block('content'); ?>
-  <?= $this->document ?>
+  <?= $this->message ?>
 <?php $this->endblock(); ?>

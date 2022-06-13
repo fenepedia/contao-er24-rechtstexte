@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /*
- * This file is part of the Contao eRecht24 Rechtstexte extension.
+ * This file is part of the Contao Rechtstexte für eRecht24 extension.
  *
  * (c) fenepedia
  *
@@ -13,7 +13,7 @@ declare(strict_types=1);
 use Contao\CoreBundle\DataContainer\PaletteManipulator;
 
 /*
- * This file is part of the Contao eRecht24 Rechtstexte extension.
+ * This file is part of the Contao Rechtstexte für eRecht24 extension.
  *
  * (c) inspiredminds
  * (c) Christian Feneberg
