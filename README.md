@@ -7,7 +7,7 @@ Mehr zur Mitgliedschaft kannst Du auf der [Website von eRecht24 erfahren](https:
 
 ## Schnellstartanleitung
 
-1. Erweiterung über den Contao Manager installieren
+1. Erweiterung über den Contao Manager (/contao-manager.phar.php) installieren
 2. Datenbank im Contao-Installtool (/contao/install) aktualisieren
 3. Über den [Projekt Manager von eRecht24](https://www.e-recht24.de/mitglieder/tools/projekt-manager/) ein neues Projekt anlegen
 4. Texte für Impressum und Datenschutzerklärung über eRecht24 erstellen
