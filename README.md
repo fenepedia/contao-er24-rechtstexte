@@ -12,7 +12,7 @@ Mehr zur Mitgliedschaft kannst Du auf der [Website von eRecht24 erfahren](https:
 3. Über den [Projekt Manager von eRecht24](https://www.e-recht24.de/mitglieder/tools/projekt-manager/) ein neues Projekt anlegen
 4. Texte für Impressum und Datenschutzerklärung über eRecht24 erstellen
 5. Neuen API-Schlüssel über das Zahnradsymbol des Projekts generieren
-6. In Contao den API-Schlüssel beim Starpunkt der Website hinterlegen
+6. In Contao den API-Schlüssel beim Fallback-Startpunkt der Website hinterlegen
 7. Neues Inhaltselement vom Typ «eRecht 24 Rechtstext» erstellen
 8. Entsprechenden Rechtstext-Typ auswählen
 
