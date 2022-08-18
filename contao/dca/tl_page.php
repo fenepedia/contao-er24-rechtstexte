@@ -47,6 +47,5 @@ PaletteManipulator::create()
     ->addField('er24ApiKey', 'erecht24_legend', PaletteManipulator::POSITION_APPEND)
     ->addField('er24Secret', 'erecht24_legend', PaletteManipulator::POSITION_APPEND)
     ->addField('er24ClientId', 'erecht24_legend', PaletteManipulator::POSITION_APPEND)
-    ->applyToPalette('root', 'tl_page')
     ->applyToPalette('rootfallback', 'tl_page')
 ;

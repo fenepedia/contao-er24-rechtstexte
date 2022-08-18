@@ -30,6 +30,10 @@ class LoadPageDetailsListener
 
         $root = end($parents);
 
+        if (empty($root->er24ApiKey) && !$root->fallback) {
+            $root = PageModel::findOneBy(['dns = ?', "fallback = '1'"], [$root->dns]) ?? $root;
+        }
+
         $page->er24ApiKey = $root->er24ApiKey;
     }
 }

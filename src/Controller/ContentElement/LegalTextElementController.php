@@ -116,11 +116,10 @@ class LegalTextElementController extends AbstractContentElementController
         if (!$cacheItem->isHit() && !empty($page->er24ApiKey)) {
             $handler = new LegalTextHandler($page->er24ApiKey, $model->er24Type, ContaoErecht24RechtstexteBundle::PLUGIN_KEY);
             $document = $handler->importDocument();
+            $language = strtolower(substr($page->language, 0, 2));
 
-            if (null !== $document && $document->getHtmlDE() !== null) {
-                // Fetch the HTML content of the legal text
-                $html = $document->getHtml('de' === substr($page->language, 0, 2) ? 'de' : 'en');
-
+            // Fetch the HTML content of the legal text
+            if (null !== $document && null !== ($html = $document->getHtml($language))) {
                 // replace emails with contao spambot safe links
                 // try to get it working with not normalized domain names
                 // please use idn syntax: https://de.wikipedia.org/wiki/Internationalisierter_Domainname
@@ -143,7 +142,7 @@ class LegalTextElementController extends AbstractContentElementController
                     $this->db->update('tl_content', ['er24Html' => $html], ['id' => (int) $model->id]);
                 }
             } else {
-                $this->lastErecht24Error = $handler->getLastErrorMessage('de' === substr($page->language, 0, 2) ? 'de' : 'en');
+                $this->lastErecht24Error = $handler->getLastErrorMessage($language);
             }
         }
 
