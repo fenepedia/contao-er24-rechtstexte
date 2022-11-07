@@ -36,7 +36,7 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 /**
  * Fetches the selected legal text from the eRecht24 API, puts them into the cache and displays the text.
  *
- * @ContentElement(type=LegalTextElementController::TYPE, category="includes")
+ * @ContentElement(type=LegalTextElementController::TYPE, category="includes", template="ce_er24_legal_text")
  */
 class LegalTextElementController extends AbstractContentElementController
 {
@@ -62,7 +62,7 @@ class LegalTextElementController extends AbstractContentElementController
         $this->db = $db;
     }
 
-    protected function getResponse(Template $template, ContentModel $model, Request $request): ?Response
+    protected function getResponse(Template $template, ContentModel $model, Request $request): Response
     {
         $page = $this->getPageModel();
 
