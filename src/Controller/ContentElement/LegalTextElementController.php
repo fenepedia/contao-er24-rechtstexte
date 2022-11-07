@@ -91,7 +91,7 @@ class LegalTextElementController extends AbstractContentElementController
                 if($this->lastErecht24Error) {
                     $errorTemplate = new BackendTemplate('be_er24_error');
                     $errorTemplate->message = $this->lastErecht24Error;
-                    return new Response($errorTemplate->parse());
+                    return $errorTemplate->getResponse();
                 } else {
                     return new Response($this->translator->trans('data_not_available', ['%type%' => $model->er24Type], 'ContaoErecht24Rechtstexte'));
                 }
@@ -102,7 +102,7 @@ class LegalTextElementController extends AbstractContentElementController
 
         $template->document = $html;
 
-        return new Response($template->parse());
+        return $template->getResponse();
     }
 
     private function getHtml(PageModel $page, ContentModel $model, array $tags): ?string
