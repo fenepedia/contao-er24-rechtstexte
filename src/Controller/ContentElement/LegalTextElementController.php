@@ -123,7 +123,7 @@ class LegalTextElementController extends AbstractContentElementController
                 // replace emails with contao spambot safe links
                 // try to get it working with not normalized domain names
                 // please use idn syntax: https://de.wikipedia.org/wiki/Internationalisierter_Domainname
-                $mailRegex = "/(?:[^\x00-\x20\x22\x40\x7F]{1,64}|\x22[^\x00-\x1F\x7F]{1,64}?\x22)@(?:\[(?:IPv)?[a-f0-9.:]{1,47}]|[\w.-]{1,252}\.[a-z]{2,63}\b)/u";
+                $mailRegex = '/((?:[^\x00-\x20\x22\x40\x7F]{1,64}|\x22[^\x00-\x1F\x7F]{1,64}?\x22)@(?:\[(?:IPv)?[a-f0-9.:]{1,47}]|[\w.-]{1,252}\.[a-z]{2,63}\b))/u';
                 $html = preg_replace($mailRegex, "{{email::$1}}", $html);
                 
                 // Store in cache item
