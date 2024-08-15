@@ -12,23 +12,21 @@ declare(strict_types=1);
 
 namespace Fenepedia\ContaoErecht24Rechtstexte\EventListener\DataContainer;
 
-use Contao\CoreBundle\ServiceAnnotation\Callback;
+use Contao\CoreBundle\ContaoCoreBundle;
+use Contao\CoreBundle\DependencyInjection\Attribute\AsCallback;
 use Contao\DataContainer;
 use Contao\PageModel;
 use eRecht24\RechtstexteSDK\ApiHandler;
 use eRecht24\RechtstexteSDK\Model\Client;
 use Fenepedia\ContaoErecht24Rechtstexte\ContaoErecht24RechtstexteBundle;
 use Fenepedia\ContaoErecht24Rechtstexte\Controller\PushController;
-use Jean85\Exception\ReplacedPackageException;
-use Jean85\PrettyVersions;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 /**
  * Registers or updates an eRecht24 push client via the API key on save.
- *
- * @Callback(table="tl_page", target="fields.er24ApiKey.save")
  */
+#[AsCallback('tl_page', 'fields.er24ApiKey.save')]
 class PageApiKeySaveCallbackListener
 {
     private $requestStack;
@@ -47,20 +45,13 @@ class PageApiKeySaveCallbackListener
         }
 
         $page = PageModel::findById($dc->id);
-
-        try {
-            $version = PrettyVersions::getVersion('contao/core-bundle');
-        } catch (ReplacedPackageException $e) {
-            $version = PrettyVersions::getVersion('contao/contao');
-        }
-
         $apiHandler = new ApiHandler($apiKey, ContaoErecht24RechtstexteBundle::PLUGIN_KEY);
 
         $client = (new Client())
             ->setPushUri($this->urlGenerator->generate(PushController::class, [], UrlGeneratorInterface::ABSOLUTE_URL))
             ->setPushMethod('POST')
             ->setCms('Contao')
-            ->setCmsVersion($version->getShortVersion())
+            ->setCmsVersion(ContaoCoreBundle::getVersion())
             ->setPluginName('fenepedia/contao-er24-rechtstexte')
         ;
 

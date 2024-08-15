@@ -16,13 +16,11 @@ use Contao\ArticleModel;
 use Contao\BackendTemplate;
 use Contao\ContentModel;
 use Contao\CoreBundle\Controller\ContentElement\AbstractContentElementController;
+use Contao\CoreBundle\DependencyInjection\Attribute\AsContentElement;
 use Contao\CoreBundle\Routing\ScopeMatcher;
-use Contao\CoreBundle\ServiceAnnotation\ContentElement;
-use Contao\FrontendTemplate;
 use Contao\PageModel;
 use Contao\Template;
 use Doctrine\DBAL\Connection;
-use eRecht24\RechtstexteSDK\Exceptions\Exception;
 use eRecht24\RechtstexteSDK\Helper\Helper;
 use eRecht24\RechtstexteSDK\LegalTextHandler;
 use eRecht24\RechtstexteSDK\Model\LegalText;
@@ -35,9 +33,8 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * Fetches the selected legal text from the eRecht24 API, puts them into the cache and displays the text.
- *
- * @ContentElement(type=LegalTextElementController::TYPE, category="includes", template="ce_er24_legal_text")
  */
+#[AsContentElement(self::TYPE, 'includes', 'ce_er24_legal_text')]
 class LegalTextElementController extends AbstractContentElementController
 {
     public const TYPE = 'er24_legal_text';

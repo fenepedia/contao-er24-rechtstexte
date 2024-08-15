@@ -12,14 +12,13 @@ declare(strict_types=1);
 
 namespace Fenepedia\ContaoErecht24Rechtstexte\EventListener;
 
-use Contao\CoreBundle\ServiceAnnotation\Hook;
+use Contao\CoreBundle\DependencyInjection\Attribute\AsHook;
 use Contao\PageModel;
 
 /**
  * Adds the eRecht24 API key to the page details.
- *
- * @Hook("loadPageDetails")
  */
+#[AsHook('loadPageDetails')]
 class LoadPageDetailsListener
 {
     public function __invoke(array $parents, PageModel $page): void

@@ -12,15 +12,6 @@ declare(strict_types=1);
 
 use Contao\CoreBundle\DataContainer\PaletteManipulator;
 
-/*
- * This file is part of the Contao Rechtstexte für eRecht24 extension.
- *
- * (c) inspiredminds
- * (c) Christian Feneberg
- *
- * @license LGPL-3.0-or-later
- */
-
 $GLOBALS['TL_DCA']['tl_page']['fields']['er24ApiKey'] = [
     'inputType' => 'text',
     'exclude' => true,
