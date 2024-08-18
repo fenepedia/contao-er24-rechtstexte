@@ -25,7 +25,7 @@ use Symfony\Contracts\Cache\TagAwareCacheInterface;
 /**
  * Handles push requests from eRecht24 and invalidates the appropriate cached legal texts.
  */
-#[Route('/_er24/push', self::class, methods: 'POST', defaults: ['_token_check' => false])]
+#[Route(path: '/_er24/push', name: self::class, methods: 'POST', defaults: ['_token_check' => false])]
 class PushController
 {
     private $db;
