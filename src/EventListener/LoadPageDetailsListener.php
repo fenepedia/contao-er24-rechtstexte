@@ -14,6 +14,7 @@ namespace Fenepedia\ContaoErecht24Rechtstexte\EventListener;
 
 use Contao\CoreBundle\DependencyInjection\Attribute\AsHook;
 use Contao\PageModel;
+use Doctrine\DBAL\Connection;
 
 /**
  * Adds the eRecht24 API key to the page details.
@@ -21,19 +22,21 @@ use Contao\PageModel;
 #[AsHook('loadPageDetails')]
 class LoadPageDetailsListener
 {
+    /**
+     * @var array<string, string>
+     */
+    private static array|null $apiKeys = null;
+
+    public function __construct(private readonly Connection $db)
+    {
+    }
+
     public function __invoke(array $parents, PageModel $page): void
     {
-        if (empty($parents)) {
-            return;
+        if (null === self::$apiKeys) {
+            self::$apiKeys = $this->db->fetchAllKeyValue("SELECT dns, er24ApiKey FROM tl_page WHERE type = 'root' AND fallback = 1");
         }
 
-        $root = end($parents);
-
-        if (empty($root->er24ApiKey) && !$root->fallback) {
-            $t = PageModel::getTable();
-            $root = PageModel::findOneBy(["$t.dns = ?", "$t.fallback = '1'"], [$root->dns]) ?? $root;
-        }
-
-        $page->er24ApiKey = $root->er24ApiKey;
+        $page->er24ApiKey = self::$apiKeys[$page->domain] ?? '';
     }
 }

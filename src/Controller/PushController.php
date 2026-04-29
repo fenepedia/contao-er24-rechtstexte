@@ -54,7 +54,7 @@ class PushController
             return new JsonResponse(['message' => 'No secret given.'], Response::HTTP_UNAUTHORIZED);
         }
 
-        $rootPage = $this->db->fetchAssociative("SELECT * FROM tl_page WHERE type = 'root' AND er24ApiKey != '' AND er24Secret = ? AND er24ClientId != '' LIMIT 1", [$secret]);
+        $rootPage = $this->db->fetchAssociative("SELECT * FROM tl_page WHERE type = 'root' AND fallback = 1 AND er24ApiKey != '' AND er24Secret = ? AND er24ClientId != '' LIMIT 1", [$secret]);
 
         if (false === $rootPage) {
             return new JsonResponse(['message' => 'Invalid secret.'], Response::HTTP_UNAUTHORIZED);
@@ -70,13 +70,15 @@ class PushController
             return new JsonResponse($pingResponse, $pingResponse['code']);
         }
 
-        $tag = 'er24_legaltext_'.$type.'_root'.$rootPage['id'];
+        // Invalidate all website roots with the same domain as the found fallback root
+        $rootIds = $this->db->fetchFirstColumn("SELECT id FROM tl_page WHERE type = 'root' AND dns = ?", [$rootPage['dns']]);
+        $tags = array_map(static fn (string|int $rootId): string => 'er24_legaltext_'.$type.'_root'.$rootId, $rootIds);
 
         if ($this->legalTextCache instanceof TagAwareCacheInterface) {
-            $this->legalTextCache->invalidateTags([$tag]);
+            $this->legalTextCache->invalidateTags($tags);
         }
 
-        $this->httpCacheManager->invalidateTags([$tag]);
+        $this->httpCacheManager->invalidateTags($tags);
 
         return new JsonResponse(['message' => 'OK'], Response::HTTP_OK);
     }
